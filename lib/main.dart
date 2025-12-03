@@ -64,7 +64,7 @@ class MainClassState extends State<MainClass> {
       title: "Visitor Management System",
       debugShowCheckedModeBanner: false,
       // theme:getThemeFromCode(appThemeCode),
-      theme: CustomTheme.orangeTheme ,
+      theme: CustomTheme.greenTheme ,
       onGenerateRoute: RouterGenerator.generateRoute,
       home: SplashScreen(),
     );

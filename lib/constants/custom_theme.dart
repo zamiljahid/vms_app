@@ -8,8 +8,8 @@ class CustomTheme {
     useMaterial3: true,
     scaffoldBackgroundColor: ColorCode.greenDarkBackground,
     secondaryHeaderColor: ColorCode.greenLightHighlight,
-    primaryColorDark: ColorCode.greenCardColor,
-    primaryColorLight: ColorCode.greenPrimaryAccent,
+    primaryColorDark: ColorCode.greenDarkBackground,
+    primaryColorLight: ColorCode.white,
     primaryColor: ColorCode.greenPrimaryAccent,
     fontFamily: 'neosansstd_regular',
     colorScheme: ColorScheme.light(
@@ -114,7 +114,7 @@ class CustomTheme {
     scaffoldBackgroundColor: ColorCode.redDarkBackground,
     secondaryHeaderColor: ColorCode.redLightHighlight,
     primaryColorDark: ColorCode.redCardColor,
-    primaryColorLight: ColorCode.redPrimaryAccent,
+    primaryColorLight: ColorCode.white,
     primaryColor: ColorCode.redPrimaryAccent,
     fontFamily: 'neosansstd_regular',
     colorScheme: ColorScheme.light(

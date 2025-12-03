@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).primaryColorDark,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -104,20 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColorDark, // Soft background
+                      color: Theme.of(context).primaryColorLight, // Soft background
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(context).primaryColorLight.withOpacity(0.7), // Light shadow
-                          offset: const Offset(-6, -6),
-                          blurRadius: 10,
-                        ),
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15), // Dark shadow
-                          offset: const Offset(6, 6),
-                          blurRadius: 10,
-                        ),
-                      ],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(25.0),
@@ -131,9 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               });
                             },
                             borderRadius: BorderRadius.circular(12),
-                            selectedColor: Theme.of(context).scaffoldBackgroundColor,
-                            fillColor: Theme.of(context).primaryColorLight,
-                            color: Theme.of(context).primaryColorLight,
+                            selectedColor: Theme.of(context).primaryColorLight,
+                            fillColor: Theme.of(context).primaryColorDark,
+                            color: Theme.of(context).primaryColorDark,
                             borderColor: Colors.transparent,
                             selectedBorderColor: Colors.transparent,
                             children: [
@@ -145,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             isLogin ? 'Welcome Back' : 'Create Account',
                             style: TextStyle(
-                              color:  Theme.of(context).primaryColorLight,
+                              color:  Theme.of(context).primaryColorDark,
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                             ),
@@ -196,20 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).primaryColorLight, // Soft background
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color:Theme.of(context).primaryColorLight.withOpacity(0.7), // Light shadow
-                          offset: const Offset(-6, -6),
-                          blurRadius: 10,
-                        ),
-                        BoxShadow(
-                          color: Theme.of(context).primaryColorLight.withOpacity(0.15), // Dark shadow
-                          offset: const Offset(6, 6),
-                          blurRadius: 10,
-                        ),
-                      ],
-                    ),
+                      borderRadius: BorderRadius.circular(20),),
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
@@ -218,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             'Welcome Back',
                             style:  TextStyle(
-                              color:Theme.of(context).primaryColorLight,
+                              color:Theme.of(context).primaryColorDark,
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                             ),
@@ -263,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
       key: ValueKey("login"),
       children: [
         _neumorphicField(Icons.email, "Email", false, controller: loginEmailController),
-        const SizedBox(height: 30),
+        const SizedBox(height: 20),
         _neumorphicField(Icons.lock, "Password", true, controller: loginPasswordController),
       ],
     );
@@ -274,11 +249,11 @@ class _LoginScreenState extends State<LoginScreen> {
       key: ValueKey("register"),
       children: [
         _neumorphicField(Icons.person, "Name", false, controller: registerNameController),
-        const SizedBox(height: 30),
+        const SizedBox(height: 20),
         _neumorphicField(Icons.phone, "Phone Number", false, controller: registerPhoneController),
-        const SizedBox(height: 30),
+        const SizedBox(height: 20),
         _neumorphicField(Icons.email, "Email", false, controller: registerEmailController),
-        const SizedBox(height: 30),
+        const SizedBox(height: 20),
         _neumorphicField(Icons.lock, "Password", true, controller: registerPasswordController),
       ],
     );
@@ -299,10 +274,6 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColorDark,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(color: Theme.of(context).primaryColorLight.withOpacity(0.8), offset: Offset(-6, -6), blurRadius: 12),
-            BoxShadow(color: Theme.of(context).primaryColorDark, offset: Offset(6, 6), blurRadius: 12),
-          ],
         ),
         child: TextField(
           controller: controller,
@@ -347,13 +318,9 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Theme.of(context).primaryColorDark,
-          boxShadow: [
-            BoxShadow(color: Theme.of(context).primaryColorLight, offset: Offset(-6, -6), blurRadius: 12),
-            BoxShadow(color: Theme.of(context).primaryColorLight, offset: Offset(6, 6), blurRadius: 12),
-          ],
+          color: Theme.of(context).primaryColorLight,
         ),
-        child: Icon(Icons.arrow_forward, color:Theme.of(context).primaryColorLight, size: 28),
+        child: Icon(Icons.arrow_forward, color:Theme.of(context).primaryColorDark, size: 28),
       ),
     );
   }
