@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:visitor_management/routes/routes.dart';
+import 'package:visitor_management/screens/add_employee_screen.dart';
 import 'package:visitor_management/screens/shared_preference.dart';
 import 'package:visitor_management/screens/splash_screen.dart';
+
+
 
 import 'constants/custom_theme.dart';
 import 'screens/login_screen.dart';
@@ -47,12 +50,10 @@ class MainClassState extends State<MainClass> {
         return CustomTheme.redTheme;
       case 3:
         return CustomTheme.greenTheme;
-      case 4:
-        return CustomTheme.amberTheme;
-      case 5:
+
+        case 4:
         return CustomTheme.purpleTheme;
-      case 6:
-        return CustomTheme.orangeTheme;
+
       default:
         return CustomTheme.blueTheme;
     }
@@ -64,7 +65,7 @@ class MainClassState extends State<MainClass> {
       title: "Visitor Management System",
       debugShowCheckedModeBanner: false,
       // theme:getThemeFromCode(appThemeCode),
-      theme: CustomTheme.greenTheme ,
+      theme: CustomTheme.greenTheme,
       onGenerateRoute: RouterGenerator.generateRoute,
       home: SplashScreen(),
     );
