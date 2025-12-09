@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 class ColorCode {
   // ===== RED THEME =====
-  static const redDarkBackground = Color(0xFF2B1B1B);     // Deep maroon background
-  static const redCardColor = Color(0xFF4A2C2C);          // Dark crimson card
+  static const redDarkBackground = Color(0xFF8B0000);     // Deep maroon background
+  static const redCardColor = Color(0xFFA30000);          // Dark crimson card
   static const redPrimaryAccent = Color(0xFFEB4D4B);      // Flamingo red
   static const redLightHighlight = Color(0xFFFFC1C1);     // Soft pink highlight
 
   // ===== BLUE THEME =====
   static const blueDarkBackground = Color(0xFF0D1B2A);    // Deep navy blue background
   static const blueCardColor = Color(0xFF1B263B);          // Slightly lighter card
-  static const bluePrimaryAccent = Color(0xFF1E90FF);      // Dodger Blue
-  static const blueLightHighlight = Color(0xFF81CFFF);     // Light blue highlight
+  static const bluePrimaryAccent = Color(0xFF00468B);      // Dodger Blue
+  static const blueLightHighlight = Color(0xFF1E90FF);     // Light blue highlight
 
   // ===== GREEN THEME =====
   static const greenDarkBackground = Color(0xFF1B2F2A);   // Deep forest green background
@@ -26,8 +26,8 @@ class ColorCode {
   static const purpleLightHighlight = Color(0xFFD7BDE2);   // Soft lilac highlight
 
   // ===== ORANGE THEME =====
-  static const orangeDarkBackground = Color(0xFF1C1C1E);   // Dark gray background for orange theme
-  static const orangeCardColor = Color(0xFF2C2C2E);        // Card color dark gray
+  static const orangeDarkBackground = Color(0xFFD16200);   // Dark gray background for orange theme
+  static const orangeCardColor = Color(0xFFFF7700);        // Card color dark gray
   static const orangePrimaryAccent = Color(0xFFFF9500);    // Bright orange accent
   static const orangeLightHighlight = Color(0xFFFFB84D);   // Light orange highlight
 

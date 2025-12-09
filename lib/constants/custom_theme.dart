@@ -10,7 +10,7 @@ class CustomTheme {
     secondaryHeaderColor: ColorCode.greenLightHighlight,
     primaryColorDark: ColorCode.greenDarkBackground,
     primaryColorLight: ColorCode.white,
-    primaryColor: ColorCode.greenPrimaryAccent,
+    primaryColor: ColorCode.greenCardColor,
     fontFamily: 'neosansstd_regular',
     colorScheme: ColorScheme.light(
       primary: ColorCode.greenPrimaryAccent,
@@ -39,48 +39,14 @@ class CustomTheme {
     ),
   );
 
-  static ThemeData amberTheme = ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: ColorCode.amberDarkBackground,
-    secondaryHeaderColor: ColorCode.amberLightHighlight,
-    primaryColorDark: ColorCode.amberCardColor,
-    primaryColorLight: ColorCode.amberPrimaryAccent,
-    primaryColor: ColorCode.amberPrimaryAccent,
-    fontFamily: 'neosansstd_regular',
-    colorScheme: ColorScheme.light(
-      primary: ColorCode.amberPrimaryAccent,
-      secondary: ColorCode.amberCardColor,
-    ),
-    inputDecorationTheme: const InputDecorationTheme(
-      iconColor: ColorCode.amberPrimaryAccent,
-      labelStyle: TextStyle(
-        color: ColorCode.primaryText,
-        fontSize: 15,
-      ),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: ColorCode.amberPrimaryAccent,
-        textStyle: const TextStyle(
-          color: ColorCode.white,
-        ),
-      ),
-    ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: ColorCode.amberCardColor,
-      iconTheme: const IconThemeData(
-        color: ColorCode.white,
-      ),
-    ),
-  );
 
   static ThemeData blueTheme = ThemeData(
     useMaterial3: true,
     scaffoldBackgroundColor: ColorCode.blueDarkBackground,
     secondaryHeaderColor: ColorCode.blueLightHighlight,
-    primaryColorDark: ColorCode.blueCardColor,
-    primaryColorLight: ColorCode.bluePrimaryAccent,
-    primaryColor: ColorCode.bluePrimaryAccent,
+    primaryColorDark: ColorCode.blueDarkBackground,
+    primaryColorLight: ColorCode.white,
+    primaryColor: ColorCode.blueCardColor,
     fontFamily: 'neosansstd_regular',
     colorScheme: ColorScheme.light(
       primary: ColorCode.bluePrimaryAccent,
@@ -113,9 +79,9 @@ class CustomTheme {
     useMaterial3: true,
     scaffoldBackgroundColor: ColorCode.redDarkBackground,
     secondaryHeaderColor: ColorCode.redLightHighlight,
-    primaryColorDark: ColorCode.redCardColor,
+    primaryColorDark: ColorCode.redDarkBackground,
     primaryColorLight: ColorCode.white,
-    primaryColor: ColorCode.redPrimaryAccent,
+    primaryColor: ColorCode.redCardColor,
     fontFamily: 'neosansstd_regular',
     colorScheme: ColorScheme.light(
       primary: ColorCode.redPrimaryAccent,
@@ -148,9 +114,9 @@ class CustomTheme {
     useMaterial3: true,
     scaffoldBackgroundColor: ColorCode.purpleDarkBackground,
     secondaryHeaderColor: ColorCode.purpleLightHighlight,
-    primaryColorDark: ColorCode.purpleCardColor,
-    primaryColorLight: ColorCode.purplePrimaryAccent,
-    primaryColor: ColorCode.purplePrimaryAccent,
+    primaryColorDark: ColorCode.purpleDarkBackground,
+    primaryColorLight: ColorCode.white,
+    primaryColor: ColorCode.purpleCardColor,
     fontFamily: 'neosansstd_regular',
     colorScheme: ColorScheme.light(
       primary: ColorCode.purplePrimaryAccent,
@@ -179,38 +145,4 @@ class CustomTheme {
     ),
   );
 
-  static ThemeData orangeTheme = ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: ColorCode.orangeDarkBackground,
-    secondaryHeaderColor: ColorCode.orangeLightHighlight,
-    primaryColorDark: ColorCode.orangeCardColor,
-    primaryColorLight: ColorCode.orangePrimaryAccent,
-    primaryColor: ColorCode.orangePrimaryAccent,
-    fontFamily: 'neosansstd_regular',
-    colorScheme: ColorScheme.light(
-      primary: ColorCode.orangePrimaryAccent,
-      secondary: ColorCode.orangeCardColor,
-    ),
-    inputDecorationTheme: const InputDecorationTheme(
-      iconColor: ColorCode.orangePrimaryAccent,
-      labelStyle: TextStyle(
-        color: ColorCode.primaryText,
-        fontSize: 15,
-      ),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: ColorCode.orangePrimaryAccent,
-        textStyle: const TextStyle(
-          color: ColorCode.white,
-        ),
-      ),
-    ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: ColorCode.orangeCardColor,
-      iconTheme: const IconThemeData(
-        color: ColorCode.white,
-      ),
-    ),
-  );
 }

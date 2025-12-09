@@ -122,8 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             selectedColor: Theme.of(context).primaryColorLight,
                             fillColor: Theme.of(context).primaryColorDark,
                             color: Theme.of(context).primaryColorDark,
-                            borderColor: Colors.transparent,
-                            selectedBorderColor: Colors.transparent,
+                            borderColor: Theme.of(context).primaryColorDark,
                             children: [
                               _neumorphicTab("Login"),
                               _neumorphicTab("Register"),
