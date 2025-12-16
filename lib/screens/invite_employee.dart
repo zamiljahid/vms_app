@@ -1,36 +1,66 @@
 import 'package:flutter/material.dart';
-
-class RoleModel {
+class CompanyModel {
   final int id;
   final String name;
-  RoleModel(this.id, this.name);
+  CompanyModel(this.id, this.name);
 }
 
-class AddEmployeeScreen extends StatefulWidget {
-  const AddEmployeeScreen({super.key});
+
+class InviteEmployee extends StatefulWidget {
+  const InviteEmployee({super.key});
 
   @override
-  State<AddEmployeeScreen> createState() => _AddEmployeeScreenState();
+  State<InviteEmployee> createState() => _InviteEmployeeState();
 }
 
-class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
+class _InviteEmployeeState extends State<InviteEmployee> {
   final _formKey = GlobalKey<FormState>();
 
-  final _name = TextEditingController();
-  final _id = TextEditingController();
-  final _phone = TextEditingController();
-  final _email = TextEditingController();
-  final _dept = TextEditingController();
-  final _designation = TextEditingController();
-  final _password = TextEditingController();
-
-  final List<RoleModel> _roles = [
-    RoleModel(1, "Admin"),
-    RoleModel(2, "Employee"),
-    RoleModel(3, "Receptionist"),
+  final List<CompanyModel> _companies = [
+    CompanyModel(1, "United Group"),
+    CompanyModel(2, "Bashundhara Group"),
+    CompanyModel(3, "Meghna Group"),
   ];
+  int? _selectedCompanyId;
+  final _phone = TextEditingController();
+  final _employeeName= TextEditingController();
+  final dateController = TextEditingController();
+  final timeController = TextEditingController();
 
-  int? _selectedRoleId;
+
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+        dateController.text =
+        "${picked.day}-${picked.month}-${picked.year}";
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedTime = picked;
+        timeController.text = picked.format(context);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +74,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
             children: [
 
               Container(
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   color: Theme.of(context).primaryColorDark,
                 ),
               ),
@@ -54,45 +84,42 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                 right: 0,
                 top: 0,
                 child: Container(
-                height: 160,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(40),
-                    bottomRight: Radius.circular(40),
-                  ),
-
-
-                  border: const Border(
-                    bottom: BorderSide(
-                      color: Colors.white,
-                      width: 2,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40),
+                    ),
+                    border: const Border(
+                      bottom: BorderSide(
+                        color: Colors.white,
+                        width: 2,
+                      ),
                     ),
                   ),
-                ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _circleButton(Icons.arrow_back_ios_new),
-                        Text(
-                          "Add Employee",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColorLight,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _circleButton(Icons.arrow_back_ios_new),
+                          Text(
+                            "Invitation",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColorLight,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 42),
-                      ],
+                          const SizedBox(width: 42),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-
-    ),
 
               Positioned(
                 left: 15,
@@ -120,12 +147,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           children: [
                             DropdownButtonHideUnderline(
                               child: DropdownButtonFormField<int>(
-                                value: _selectedRoleId,
+                                value: _selectedCompanyId,
                                 dropdownColor: Theme.of(context).primaryColorDark,
                                 menuMaxHeight: 300,
                                 isExpanded: true,
                                 hint: Text(
-                                  "Select Role Type",
+                                  "Select Company",
                                   style: TextStyle(color: Theme.of(context).primaryColorLight),
                                 ),
                                 decoration: InputDecoration(
@@ -150,11 +177,11 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                 style: TextStyle(color: Theme.of(context).primaryColorDark),
                                 iconEnabledColor: Theme.of(context).primaryColorLight,
 
-                                items: _roles.map((role) {
+                                items: _companies.map((company) {
                                   return DropdownMenuItem(
-                                    value: role.id,
+                                    value: company.id,
                                     child: Text(
-                                      role.name,
+                                      company.name,
                                       style: TextStyle(
                                         color: Theme.of(context).primaryColorLight,
                                       ),
@@ -164,28 +191,39 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
 
                                 onChanged: (value) {
                                   setState(() {
-                                    _selectedRoleId = value;
+                                    _selectedCompanyId = value;
                                   });
                                 },
 
                                 validator: (value) {
                                   if (value == null) {
-                                    return "Please select a role";
+                                    return "Please select a company";
                                   }
                                   return null;
                                 },
                               ),
                             ),
                             const SizedBox(height: 20),
-                            _field("Name", _name),
-                            _field("Employee ID", _id),
                             _field("Phone Number", _phone,
                                 keyboard: TextInputType.phone),
-                            _field("Email", _email,
-                                keyboard: TextInputType.emailAddress),
-                            _field("Department", _dept),
-                            _field("Designation", _designation),
-                            _field("Password", _password, obscure: true),
+                            _field("Employee Name", _employeeName,
+                                keyboard: TextInputType.phone),
+
+
+
+                            GestureDetector(
+                              onTap: () => _selectDate(context),
+                              child: AbsorbPointer(
+                                child: _field("Date", dateController),
+                              ),
+                            ),
+
+                            GestureDetector(
+                              onTap: () => _selectTime(context),
+                              child: AbsorbPointer(
+                                child: _field("Time", timeController),
+                              ),
+                            ),
 
                             const SizedBox(height: 20),
                             SizedBox(
@@ -198,13 +236,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                     borderRadius: BorderRadius.circular(18),
                                   ),
                                 ),
-                                onPressed: () {
-                                  print("Selected Role ID = $_selectedRoleId");
-                                },
-                                child:  Text(
-                                  "Add Employee",
+                                onPressed: () {},
+                                child: Text(
+                                  "Invite",
                                   style: TextStyle(
-                                      fontSize: 18, color: Theme.of(context).primaryColorLight),
+                                      fontSize: 18,
+                                      color: Theme.of(context).primaryColorLight),
                                 ),
                               ),
                             )
@@ -221,7 +258,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       ),
     );
   }
-
   Widget _circleButton(IconData icon) {
     return Container(
       height: 42,
@@ -246,10 +282,11 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         controller: controller,
         obscureText: obscure,
         keyboardType: keyboard,
-        style:  TextStyle(color: Theme.of(context).primaryColorDark),
+        style: TextStyle(color: Theme.of(context).primaryColorDark),
+        readOnly: false,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle:  TextStyle(color: Theme.of(context).primaryColorDark),
+          labelStyle: TextStyle(color: Theme.of(context).primaryColorDark),
           fillColor: Theme.of(context).primaryColorDark.withOpacity(0.06),
           filled: true,
           enabledBorder: OutlineInputBorder(
@@ -258,8 +295,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide:
-             BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
+            borderSide: BorderSide(
+                color: Theme.of(context).primaryColor, width: 1.5),
           ),
         ),
       ),

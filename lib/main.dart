@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:visitor_management/routes/routes.dart';
 import 'package:visitor_management/screens/add_employee_screen.dart';
+import 'package:visitor_management/screens/appointment_screen.dart';
+import 'package:visitor_management/screens/invite_employee.dart';
+import 'package:visitor_management/screens/select_screen.dart';
 import 'package:visitor_management/screens/shared_preference.dart';
 import 'package:visitor_management/screens/splash_screen.dart';
 
@@ -67,7 +70,7 @@ class MainClassState extends State<MainClass> {
       // theme:getThemeFromCode(appThemeCode),
       theme: CustomTheme.greenTheme,
       onGenerateRoute: RouterGenerator.generateRoute,
-      home: SplashScreen(),
+      home: SelectScreen(),
     );
   }
 }
