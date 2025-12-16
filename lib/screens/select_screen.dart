@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import 'employee_login_screen.dart';
 import 'visitor_login_screen.dart';
 
 class SelectScreen extends StatelessWidget {
@@ -109,7 +109,7 @@ class SelectScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>  LoginScreen(),
+                        builder: (_) =>  EmployeeLoginScreen(),
                       ),
                     );
                   },
