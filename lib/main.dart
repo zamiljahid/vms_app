@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:visitor_management/routes/routes.dart';
-import 'package:visitor_management/screens/add_employee_screen.dart';
-import 'package:visitor_management/screens/appointment_screen.dart';
-import 'package:visitor_management/screens/invite_employee.dart';
-import 'package:visitor_management/screens/select_screen.dart';
 import 'package:visitor_management/screens/shared_preference.dart';
 import 'package:visitor_management/screens/splash_screen.dart';
 
 
 
 import 'constants/custom_theme.dart';
-import 'screens/login_screen.dart';
+import 'screens/employee_login_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs.init();
@@ -53,7 +49,6 @@ class MainClassState extends State<MainClass> {
         return CustomTheme.redTheme;
       case 3:
         return CustomTheme.greenTheme;
-
         case 4:
         return CustomTheme.purpleTheme;
 
@@ -67,10 +62,10 @@ class MainClassState extends State<MainClass> {
     return MaterialApp(
       title: "Visitor Management System",
       debugShowCheckedModeBanner: false,
-      // theme:getThemeFromCode(appThemeCode),
-      theme: CustomTheme.greenTheme,
+      theme:getThemeFromCode(appThemeCode),
+      // theme: CustomTheme.greenTheme,
       onGenerateRoute: RouterGenerator.generateRoute,
-      home: SelectScreen(),
+      home: SplashScreen(),
     );
   }
 }

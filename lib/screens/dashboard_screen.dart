@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visitor_management/api/api_client.dart';
 import 'package:visitor_management/screens/wrapper.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -26,23 +27,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: GridView.builder(
-              itemCount: dashboardItems.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 cards per row
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              itemBuilder: (context, index) {
-                return _buildNeumorphicCard(
-                  icon: dashboardItems[index]['icon'],
-                  title: dashboardItems[index]['title'],
-                );
-              },
+            child: Column(
+              children: [
+                Expanded(
+                  child: GridView.builder(
+                    itemCount: dashboardItems.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemBuilder: (context, index) {
+                      return _buildNeumorphicCard(
+                        icon: dashboardItems[index]['icon'],
+                        title: dashboardItems[index]['title'],
+                      );
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ApiClient.performLogout(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColorLight,
+                      foregroundColor: Theme.of(context).primaryColorDark,
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text('LOGOUT'),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-        bottomNavigationBar: Padding(
+          bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(22.0),
           child: _buildBottomNav(),
         ),

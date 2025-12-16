@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'dashboard_screen.dart';
 
 class VisitorLoginScreen extends StatefulWidget {
+  const VisitorLoginScreen({super.key});
+
   @override
-  _VisitorLoginScreenState createState() => _VisitorLoginScreenState();
+  State<VisitorLoginScreen> createState() => _VisitorLoginScreenState();
 }
 
 class _VisitorLoginScreenState extends State<VisitorLoginScreen> {
@@ -12,12 +14,8 @@ class _VisitorLoginScreenState extends State<VisitorLoginScreen> {
   bool isAppKey = false;
   bool isAdmin = false;
   bool _isObscure = true;
-
-  // Controllers for login
   final TextEditingController loginEmailController = TextEditingController();
   final TextEditingController loginPasswordController = TextEditingController();
-
-  // Controllers for register
   final TextEditingController registerNameController = TextEditingController();
   final TextEditingController registerNIDController = TextEditingController();
   final TextEditingController registerPassportController = TextEditingController();

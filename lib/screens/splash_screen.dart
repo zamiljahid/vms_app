@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:visitor_management/screens/login_screen.dart';
+import 'package:visitor_management/screens/employee_login_screen.dart';
+import 'package:visitor_management/screens/select_screen.dart';
+import 'package:visitor_management/screens/shared_preference.dart';
 import 'package:visitor_management/screens/wrapper.dart';
+
+import 'dashboard_screen.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -61,14 +65,11 @@ class _SplashScreenState extends State<SplashScreen>
     ]).animate(_bgController);
 
     _bgController.repeat();
-
-    // Slide animation controller for shifting splash content
     _slideController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
 
-    // We'll initialize _slideAnimation later in didChangeDependencies
   }
 
   @override
@@ -85,16 +86,20 @@ class _SplashScreenState extends State<SplashScreen>
           : const Offset(1.5, 0), // shift right off screen on larger
     ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeInOut));
 
-    // Start timer AFTER _slideAnimation is ready
     Timer(const Duration(seconds: 4), () async {
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-              pageBuilder: (_, __, ____) =>  LoginScreen(),
+      if (!mounted) return;
+
+      final accessToken = SharedPrefs.getString('accessToken');
+
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) =>
+          (accessToken != null && accessToken.isNotEmpty)
+              ? DashboardScreen()
+              : SelectScreen(),
           transitionDuration: Duration.zero,
         ),
       );
-    }
     });
   }
 
