@@ -50,9 +50,6 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
       if (company != null && company.success) {
         setState(() {
           isVerify = true;
-          // SharedPrefs.setString('company_id', company.companyId.toString());
-          // SharedPrefs.setInt('appThemeCode', company.theme);
-          // appThemeCode = company.theme;
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -92,7 +89,6 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).primaryColorDark,
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
@@ -100,25 +96,43 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 10),
+                const SizedBox(height: 60),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(10),
+                      backgroundColor: Theme.of(context).primaryColorLight,
+                    ),
+                    child:  Icon(
+                      Icons.arrow_back,
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Stack(
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      width: 170,
-                      height: 170,
+                      width: 190,
+                      height: 190,
                       decoration: BoxDecoration(
                         color: Theme.of(context).primaryColorDark,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.8),
+                            color: Colors.black.withOpacity(0.5),
                             offset: const Offset(8, 8),
                             blurRadius: 15,
                             spreadRadius: 1,
                           ),
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.8),
+                            color: Colors.black.withOpacity(0.5),
                             offset: const Offset(-8, -8),
                             blurRadius: 15,
                             spreadRadius: 1,
@@ -127,22 +141,22 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
                       ),
                     ),
                     Container(
-                      width: 140,
-                      height: 140,
+                      width: 150,
+                      height: 150,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.transparent,
                         border: Border.all(
                           color: Theme.of(
                             context,
-                          ).primaryColorLight.withOpacity(0.7),
+                          ).primaryColorLight.withOpacity(0.9),
                           width: 8,
                         ),
                         boxShadow: [
                           BoxShadow(
                             color: Theme.of(
                               context,
-                            ).primaryColorLight.withOpacity(0.4),
+                            ).primaryColorLight.withOpacity(0.3),
                             blurRadius: 20,
                             spreadRadius: 4,
                             offset: const Offset(0, 5),
@@ -151,8 +165,8 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
                       ),
                     ),
                     Container(
-                      width: 110,
-                      height: 110,
+                      width: 120,
+                      height: 120,
                       decoration: BoxDecoration(
                         color: Theme.of(context).primaryColorDark,
                         shape: BoxShape.circle,
@@ -273,7 +287,6 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
                                     ),
                                   );
                                 } else {
-                                  // Show server error message
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -490,7 +503,7 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
         final loginId = loginController.text.trim();
         final password = passwordController.text.trim();
 
-        final result = await ApiClient().loginUser(
+        final result = await ApiClient().employeeLogin(
           companyId: SharedPrefs.getString('company_id').toString(),
           loginId: loginId,
           password: password,

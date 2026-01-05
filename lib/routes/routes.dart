@@ -1,10 +1,15 @@
 import 'dart:ui';
 import 'package:visitor_management/screens/add_employee_screen.dart';
-import 'package:visitor_management/screens/appointment_screen.dart';
+import 'package:visitor_management/screens/create_appointment_screen.dart';
 import 'package:visitor_management/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:visitor_management/screens/invite_employee.dart';
+import 'package:visitor_management/screens/manage_appointment_screen.dart';
+import 'package:visitor_management/screens/reception_log_screen.dart';
+import 'package:visitor_management/screens/scan_qr_screen.dart';
+import 'package:visitor_management/screens/walk-in_screen.dart';
+import '../screens/appointment_screen.dart';
 import '../screens/splash_screen.dart';
 import '../screens/wrapper.dart';
 import 'routes_names.dart';
@@ -27,6 +32,22 @@ class RouterGenerator {
       case RouteConstantName.appointmentScreen:
         return MaterialPageRoute(
           builder: (context) =>  AppointmentScreen(),
+        );
+      case RouteConstantName.manageAppointmentScreen:
+        return MaterialPageRoute(
+          builder: (context) =>  ManageAppointmentsScreen(),
+        );
+      case RouteConstantName.receptionLogScreen:
+        return MaterialPageRoute(
+          builder: (context) =>  ReceptionLogScreen(),
+        );
+      case RouteConstantName.scanQRScreen:
+        return MaterialPageRoute(
+          builder: (context) =>  ScanQRScreen(),
+        );
+      case RouteConstantName.walkInScreen:
+        return MaterialPageRoute(
+          builder: (context) =>  WalkInScreen(),
         );
       case RouteConstantName.dashboardScreen:
         return MaterialPageRoute(
@@ -72,10 +93,16 @@ class RouterGenerator {
               ),
             ),
           ),
-          body: Center(
-            child: Lottie.asset('animation/lockedPage.json',
-                height:
-                MediaQuery.of(context).size.height / 2),
+          body:
+
+
+          Center(
+            child: Image.asset('assets/images/error.png')
+
+
+            // Lottie.asset('animation/lockedPage.json',
+            //     height:
+            //     MediaQuery.of(context).size.height / 2),
           ),
         ),
       );

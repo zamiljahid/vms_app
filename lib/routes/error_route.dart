@@ -48,9 +48,11 @@ class _ErrorRouteScreenState extends State<ErrorRouteScreen> {
           ),
         ),
         body: Center(
-          child: Lottie.asset('animation/lockedPage.json',
-              height:
-              MediaQuery.of(context).size.height / 2),
+          child: Image.asset('assets/images/error.png')
+
+          // Lottie.asset('animation/lockedPage.json',
+          //     height:
+          //     MediaQuery.of(context).size.height / 2),
         ),
       ),
     );
