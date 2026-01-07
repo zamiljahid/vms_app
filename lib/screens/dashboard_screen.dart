@@ -6,6 +6,7 @@ import '../../api/api_client.dart';
 import '../../routes/menu_title_list.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../models/menu _model.dart';
+import 'appointment_screen.dart';
 import 'menu_card.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen>
     with TickerProviderStateMixin {
   String? menuName, profilePic;
+  int? role;
 
   Future<ApiResponse<List<MenuModel>>>? menuList;
 
@@ -30,6 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   @override
   void initState() {
     menuList = ApiClient().getMenusByRole(SharedPrefs.getInt('roleId')??4);
+    role = SharedPrefs.getInt('roleId');
     _animationController =
     AnimationController(vsync: this, duration: Duration(milliseconds: 250))
       ..addListener(() {
@@ -101,6 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           final List<MenuModel> menus = snapshot.data!.data ?? [];
           return HomeWidget(
             dashboardList: menus,
+            role: role ?? 4,
           );
         },
       ),
@@ -111,10 +115,12 @@ class _DashboardScreenState extends State<DashboardScreen>
 
 class HomeWidget extends StatefulWidget {
   final List dashboardList;
+  final int role;
 
   const HomeWidget({
     super.key,
     required this.dashboardList,
+    required this.role,
   });
 
   @override
@@ -127,6 +133,30 @@ class _HomeWidgetState extends State<HomeWidget> {
   void initState() {
     super.initState();
   }
+  final List<Map<String, dynamic>> appointments = [
+    {
+      "status": "Pending",
+      "qrData": "APPT12345",
+      "company": "TechCorp",
+      "date": "2025-12-30",
+      "employee": "John Doe",
+      "department": "IT",
+      "designation": "Software Engineer",
+      "createdBy": "Admin",
+      "visitors": ["Alice", "Bob"]
+    },
+    {
+      "status": "Confirmed",
+      "qrData": "",
+      "company": "BizGroup",
+      "date": "2025-12-31",
+      "employee": "Jane Smith",
+      "department": "HR",
+      "designation": "HR Manager",
+      "createdBy": "Admin",
+      "visitors": ["Charlie"]
+    },
+  ];
 
 
   Future onGoBack(dynamic value) async {
@@ -322,26 +352,39 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
           ),
           SizedBox(height: 20,),
-          Divider(color: Theme.of(context)
-              .primaryColorLight,),
-          Text(
-            'My Menus',
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context)
-                  .primaryColorLight,
-              decoration: TextDecoration.none,
+          if(widget.role != 4)...[
+            Divider(color: Theme.of(context)
+                .primaryColorLight,),
+            Text(
+              'My Menus',
+              style: TextStyle(
+                fontSize: 18,
+                color: Theme.of(context)
+                    .primaryColorLight,
+                decoration: TextDecoration.none,
+              ),
             ),
-          ),
-          Divider(color: Theme.of(context)
-              .primaryColorLight,),
-          SizedBox(height: 10,),
-          MenuItems(
-            dashboardList: widget.dashboardList,
-            onBack: (dynamic value) {
-              onGoBack(value);
-            },
-          ),
+            Divider(color: Theme.of(context)
+                .primaryColorLight,),
+            SizedBox(height: 10,),
+            MenuItems(
+              dashboardList: widget.dashboardList,
+              onBack: (dynamic value) {
+                onGoBack(value);
+              },
+            ),
+          ],
+          if (widget.role == 4) ...[
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: appointments
+                    .map((appointment) => AppointmentCard(appointment: appointment))
+                    .toList(),
+              ),
+            ),
+          ],
         ],
       ),
     );

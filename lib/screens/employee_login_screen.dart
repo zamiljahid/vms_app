@@ -528,14 +528,16 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
           final newAppThemeCode = themeCode;
           if (previousTheme != newAppThemeCode) {
             await SharedPrefs.setInt('appThemeCode', newAppThemeCode);
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (_) => MainClass()),
+                  (Route<dynamic> route) => false, // remove all previous routes
             );
           } else {
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (_) => DashboardScreen()),
+                  (Route<dynamic> route) => false, // remove all previous routes
             );
           }
 

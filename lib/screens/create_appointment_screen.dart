@@ -4,20 +4,46 @@ class CreateAppointmentScreen extends StatefulWidget {
   const CreateAppointmentScreen({super.key});
 
   @override
-  State<CreateAppointmentScreen> createState() => _CreateAppointmentScreenState();
+  State<CreateAppointmentScreen> createState() =>
+      _CreateAppointmentScreenState();
 }
 
 class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final _companyName = TextEditingController();
-  final _employeeName= TextEditingController();
+  final _employeeName = TextEditingController();
   final dateController = TextEditingController();
   final timeController = TextEditingController();
-  final _visitPurpose= TextEditingController();
+  final _visitPurpose = TextEditingController();
 
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
+  final List<Map<String, dynamic>> appointments = [
+    {
+      "status": "Pending",
+      "qrData": "APPT12345",
+      "company": "TechCorp",
+      "date": "2025-12-30",
+      "employee": "John Doe",
+      "department": "IT",
+      "designation": "Software Engineer",
+      "createdBy": "Admin",
+      "visitors": ["Alice", "Bob"]
+    },
+    {
+      "status": "Confirmed",
+      "qrData": "",
+      "company": "BizGroup",
+      "date": "2025-12-31",
+      "employee": "Jane Smith",
+      "department": "HR",
+      "designation": "HR Manager",
+      "createdBy": "Admin",
+      "visitors": ["Charlie"]
+    },
+  ];
+
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -30,8 +56,7 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
-        dateController.text =
-        "${picked.day}-${picked.month}-${picked.year}";
+        dateController.text = "${picked.day}-${picked.month}-${picked.year}";
       });
     }
   }
@@ -76,18 +101,23 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
                       bottomRight: Radius.circular(40),
                     ),
                     border: const Border(
-                      bottom: BorderSide(
-                        color: Colors.white,
-                        width: 2,
-                      ),
+                      bottom: BorderSide(color: Colors.white, width: 2),
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _circleButton(Icons.arrow_back_ios_new),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: _circleButton(Icons.arrow_back_ios_new),
+                        ),
                         Text(
                           "Appointment",
                           style: TextStyle(
@@ -129,22 +159,29 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
                           children: [
                             const SizedBox(height: 20),
                             _field("Company Name", _companyName),
-                            _field("Employee Name", _employeeName,
-                                keyboard: TextInputType.phone),
-
-
+                            _field(
+                              "Employee Name",
+                              _employeeName,
+                              keyboard: TextInputType.phone,
+                            ),
 
                             GestureDetector(
                               onTap: () => _selectDate(context),
                               child: AbsorbPointer(
-                                child: _field("Appointment Date", dateController),
+                                child: _field(
+                                  "Appointment Date",
+                                  dateController,
+                                ),
                               ),
                             ),
 
                             GestureDetector(
                               onTap: () => _selectTime(context),
                               child: AbsorbPointer(
-                                child: _field("Appointment Time", timeController),
+                                child: _field(
+                                  "Appointment Time",
+                                  timeController,
+                                ),
                               ),
                             ),
                             _field("Purpose of Visit", _visitPurpose),
@@ -155,7 +192,8 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).primaryColorDark,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColorDark,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(18),
                                   ),
@@ -164,11 +202,12 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
                                 child: Text(
                                   "Take Appointment",
                                   style: TextStyle(
-                                      fontSize: 18,
-                                      color: Theme.of(context).primaryColorLight),
+                                    fontSize: 18,
+                                    color: Theme.of(context).primaryColorLight,
+                                  ),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -182,6 +221,7 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
       ),
     );
   }
+
   Widget _circleButton(IconData icon) {
     return Container(
       height: 42,
@@ -195,11 +235,11 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
   }
 
   Widget _field(
-      String label,
-      TextEditingController controller, {
-        bool obscure = false,
-        TextInputType keyboard = TextInputType.text,
-      }) {
+    String label,
+    TextEditingController controller, {
+    bool obscure = false,
+    TextInputType keyboard = TextInputType.text,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
@@ -220,7 +260,9 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
-                color: Theme.of(context).primaryColor, width: 1.5),
+              color: Theme.of(context).primaryColor,
+              width: 1.5,
+            ),
           ),
         ),
       ),
