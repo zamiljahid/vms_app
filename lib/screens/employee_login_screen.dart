@@ -270,7 +270,7 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
                               if (company != null) {
                                 if (company.success) {
                                   setState(() {
-                                    isVerify = true; // mark as verified
+                                    isVerify = true;
                                     SharedPrefs.setString('key', appKeyController.text.trim());
                                     SharedPrefs.setString('company_id', company.companyId.toString());
                                     SharedPrefs.setInt('appThemeCode', company.theme);
