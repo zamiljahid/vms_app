@@ -6,14 +6,14 @@ class CompanyModel {
 }
 
 
-class InviteEmployee extends StatefulWidget {
-  const InviteEmployee({super.key});
+class SendInvitationScreen extends StatefulWidget {
+  const SendInvitationScreen({super.key});
 
   @override
-  State<InviteEmployee> createState() => _InviteEmployeeState();
+  State<SendInvitationScreen> createState() => _SendInvitationScreenState();
 }
 
-class _InviteEmployeeState extends State<InviteEmployee> {
+class _SendInvitationScreenState extends State<SendInvitationScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final List<CompanyModel> _companies = [
@@ -65,8 +65,6 @@ class _InviteEmployeeState extends State<InviteEmployee> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff0B1F3A),
-
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -98,24 +96,22 @@ class _InviteEmployeeState extends State<InviteEmployee> {
                       ),
                     ),
                   ),
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _circleButton(Icons.arrow_back_ios_new),
-                          Text(
-                            "Invitation",
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColorLight,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _circleButton(Icons.arrow_back),
+                        Text(
+                          "Send Invitation",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColorLight,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(width: 42),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(width: 42),
+                      ],
                     ),
                   ),
                 ),
@@ -208,9 +204,6 @@ class _InviteEmployeeState extends State<InviteEmployee> {
                                 keyboard: TextInputType.phone),
                             _field("Employee Name", _employeeName,
                                 keyboard: TextInputType.phone),
-
-
-
                             GestureDetector(
                               onTap: () => _selectDate(context),
                               child: AbsorbPointer(
@@ -259,14 +252,19 @@ class _InviteEmployeeState extends State<InviteEmployee> {
     );
   }
   Widget _circleButton(IconData icon) {
-    return Container(
-      height: 42,
-      width: 42,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Theme.of(context).primaryColorDark,
+    return GestureDetector(
+      onTap: (){
+        Navigator.pop(context);
+      },
+      child: Container(
+        height: 42,
+        width: 42,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Theme.of(context).primaryColorDark,
+        ),
+        child: Icon(icon, color: Theme.of(context).primaryColorLight, size: 20),
       ),
-      child: Icon(icon, color: Theme.of(context).primaryColorLight, size: 20),
     );
   }
 

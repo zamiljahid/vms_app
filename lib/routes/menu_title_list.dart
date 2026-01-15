@@ -9,7 +9,7 @@ class ChooseMenu {
       case "Appointment":
         return "My Appointments";
       case "Invite":
-        return "Send Invitation";
+        return "Invitation";
       case "Add Employee":
         return "Add Employee";
       case "Reception Log":
@@ -18,6 +18,8 @@ class ChooseMenu {
         return "Manage Appointments";
       case "Walk-In":
         return "Walk-In";
+      case "Create Walk-In":
+        return "Create Walk-In";
       case "Scan QR":
         return "Scan QR";
       default:
@@ -41,6 +43,8 @@ class ChooseMenu {
         return 'assets/images/manageAppointment.png';
       case "Walk-In":
         return 'assets/images/walkIn.png';
+      case "Create Walk-In":
+        return 'assets/images/create_walkin.png';
       case "Scan QR":
         return 'assets/images/scanQR.png';
       default:
@@ -64,6 +68,8 @@ class ChooseMenu {
         return RouteConstantName.manageAppointmentScreen;
       case "Walk-In":
         return RouteConstantName.walkInScreen;
+      case "Create Walk-In":
+        return RouteConstantName.createWalkInScreen;
       case "Scan QR":
         return RouteConstantName.scanQRScreen;
       default:

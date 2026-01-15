@@ -416,8 +416,8 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
     return Column(
       children: [
         _neumorphicField(
-          Icons.email,
-          "Email",
+          Icons.person,
+          "Login ID",
           controller: loginController,
         ),
         const SizedBox(height: 16),
@@ -514,6 +514,7 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
           SharedPrefs.setString('userId', result['userId']);
           SharedPrefs.setInt('roleId', result['roleId']);
           SharedPrefs.setString('accessToken', result['accessToken']);
+          SharedPrefs.setInt('identity', result['identityId']);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Theme.of(context).primaryColorLight,
@@ -531,16 +532,15 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (_) => MainClass()),
-                  (Route<dynamic> route) => false, // remove all previous routes
+                  (Route<dynamic> route) => false,
             );
           } else {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (_) => DashboardScreen()),
-                  (Route<dynamic> route) => false, // remove all previous routes
+                  (Route<dynamic> route) => false,
             );
           }
-
         } else {
           showDialog(
             context: context,

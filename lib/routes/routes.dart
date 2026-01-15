@@ -1,15 +1,14 @@
 import 'dart:ui';
 import 'package:visitor_management/screens/add_employee_screen.dart';
-import 'package:visitor_management/screens/create_appointment_screen.dart';
 import 'package:visitor_management/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:visitor_management/screens/invite_employee.dart';
+import 'package:visitor_management/screens/invitation/invitation_screen.dart';
 import 'package:visitor_management/screens/manage_appointment_screen.dart';
 import 'package:visitor_management/screens/reception_log_screen.dart';
 import 'package:visitor_management/screens/scan_qr_screen.dart';
-import 'package:visitor_management/screens/walk-in_screen.dart';
-import '../screens/appointment_screen.dart';
+import 'package:visitor_management/screens/walkin/create_walkin_screen.dart';
+import 'package:visitor_management/screens/walkin/walk-in_screen.dart';
+import '../screens/appointments/appointment_screen.dart';
 import '../screens/splash_screen.dart';
 import '../screens/wrapper.dart';
 import 'routes_names.dart';
@@ -27,7 +26,7 @@ class RouterGenerator {
         );
       case RouteConstantName.inviteEmployeeScreen:
         return MaterialPageRoute(
-          builder: (context) =>  InviteEmployee(),
+          builder: (context) =>  InvitationScreen(),
         );
       case RouteConstantName.appointmentScreen:
         return MaterialPageRoute(
@@ -48,6 +47,10 @@ class RouterGenerator {
       case RouteConstantName.walkInScreen:
         return MaterialPageRoute(
           builder: (context) =>  WalkInScreen(),
+        );
+      case RouteConstantName.createWalkInScreen:
+        return MaterialPageRoute(
+          builder: (context) =>  CreateWalkinScreen(),
         );
       case RouteConstantName.dashboardScreen:
         return MaterialPageRoute(

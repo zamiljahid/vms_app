@@ -324,6 +324,7 @@ class _VisitorLoginScreenState extends State<VisitorLoginScreen> {
                           SharedPrefs.setString('userId', result['userId']);
                           SharedPrefs.setInt('roleId', result['roleId']);
                           SharedPrefs.setString('accessToken', result['accessToken']);
+                          SharedPrefs.setInt('identity', result['identityId']);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               backgroundColor: Theme.of(context).primaryColorLight,
@@ -338,14 +339,16 @@ class _VisitorLoginScreenState extends State<VisitorLoginScreen> {
                           final appTheme = SharedPrefs.getInt('appThemeCode');
                           if (appTheme != 4) {
                             await SharedPrefs.setInt('appThemeCode', 4);
-                            Navigator.pushReplacement(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (_) => MainClass()),
+                                  (Route<dynamic> route) => false,
                             );
                           } else {
-                            Navigator.pushReplacement(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (_) => DashboardScreen()),
+                                  (Route<dynamic> route) => false,
                             );
                           }
                         } else {

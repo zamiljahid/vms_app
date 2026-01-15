@@ -69,9 +69,7 @@ class WalkInScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 20),
-
                 Text(
                   "Visitor Management System",
                   textAlign: TextAlign.center,

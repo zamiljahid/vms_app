@@ -1,13 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:visitor_management/screens/employee_login_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:visitor_management/screens/dashboard_screen.dart';
 import 'package:visitor_management/screens/select_screen.dart';
 import 'package:visitor_management/screens/shared_preference.dart';
 import 'package:visitor_management/screens/wrapper.dart';
-
-import 'dashboard_screen.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -70,6 +67,18 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 800),
     );
 
+    // Request permissions on init
+    _requestPermissions();
+  }
+
+  Future<void> _requestPermissions() async {
+    await [
+      Permission.camera,
+      Permission.location,
+      Permission.storage,
+      Permission.photos,
+      Permission.notification
+    ].request();
   }
 
   @override
@@ -82,23 +91,25 @@ class _SplashScreenState extends State<SplashScreen>
     _slideAnimation = Tween<Offset>(
       begin: Offset.zero, // centered
       end: isMobile
-          ? const Offset(0, -2) // shift up off screen on mobile
-          : const Offset(1.5, 0), // shift right off screen on larger
+          ? const Offset(0, -2)
+          : const Offset(1.5, 0),
     ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeInOut));
 
+    // Delay navigation after splash
     Timer(const Duration(seconds: 4), () async {
       if (!mounted) return;
 
       final accessToken = SharedPrefs.getString('accessToken');
 
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (_, __, ___) =>
           (accessToken != null && accessToken.isNotEmpty)
-              ? DashboardScreen()
-              : SelectScreen(),
+              ? const DashboardScreen()
+              : const SelectScreen(),
           transitionDuration: Duration.zero,
         ),
+            (Route<dynamic> route) => false,
       );
     });
   }

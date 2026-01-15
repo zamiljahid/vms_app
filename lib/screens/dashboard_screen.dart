@@ -6,7 +6,7 @@ import '../../api/api_client.dart';
 import '../../routes/menu_title_list.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../models/menu _model.dart';
-import 'appointment_screen.dart';
+import 'appointments/appointment_screen.dart';
 import 'menu_card.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -133,31 +133,6 @@ class _HomeWidgetState extends State<HomeWidget> {
   void initState() {
     super.initState();
   }
-  final List<Map<String, dynamic>> appointments = [
-    {
-      "status": "Pending",
-      "qrData": "APPT12345",
-      "company": "TechCorp",
-      "date": "2025-12-30",
-      "employee": "John Doe",
-      "department": "IT",
-      "designation": "Software Engineer",
-      "createdBy": "Admin",
-      "visitors": ["Alice", "Bob"]
-    },
-    {
-      "status": "Confirmed",
-      "qrData": "",
-      "company": "BizGroup",
-      "date": "2025-12-31",
-      "employee": "Jane Smith",
-      "department": "HR",
-      "designation": "HR Manager",
-      "createdBy": "Admin",
-      "visitors": ["Charlie"]
-    },
-  ];
-
 
   Future onGoBack(dynamic value) async {
     if (mounted) {
@@ -352,7 +327,6 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
           ),
           SizedBox(height: 20,),
-          if(widget.role != 4)...[
             Divider(color: Theme.of(context)
                 .primaryColorLight,),
             Text(
@@ -373,18 +347,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                 onGoBack(value);
               },
             ),
-          ],
-          if (widget.role == 4) ...[
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: appointments
-                    .map((appointment) => AppointmentCard(appointment: appointment))
-                    .toList(),
-              ),
-            ),
-          ],
         ],
       ),
     );
