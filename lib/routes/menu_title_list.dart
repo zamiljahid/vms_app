@@ -14,6 +14,8 @@ class ChooseMenu {
         return "Add Employee";
       case "Reception Log":
         return "Reception Log";
+      case "Reception Task":
+        return "Reception Task";
       case "Manage Appointments":
         return "Manage Appointments";
       case "Walk-In":
@@ -39,6 +41,8 @@ class ChooseMenu {
         return 'assets/images/addEmployee.png';
       case "Reception Log":
         return 'assets/images/receptionLog.png';
+      case "Reception Task":
+        return 'assets/images/receptionTask.png';
       case "Manage Appointments":
         return 'assets/images/manageAppointment.png';
       case "Walk-In":
@@ -64,6 +68,8 @@ class ChooseMenu {
         return RouteConstantName.addEmployeeScreen;
       case "Reception Log":
         return RouteConstantName.receptionLogScreen;
+      case "Reception Task":
+        return RouteConstantName.receptionTaskScreen;
       case "Manage Appointments":
         return RouteConstantName.manageAppointmentScreen;
       case "Walk-In":

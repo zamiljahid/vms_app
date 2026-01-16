@@ -9,6 +9,7 @@ import 'package:visitor_management/screens/scan_qr_screen.dart';
 import 'package:visitor_management/screens/walkin/create_walkin_screen.dart';
 import 'package:visitor_management/screens/walkin/walk-in_screen.dart';
 import '../screens/appointments/appointment_screen.dart';
+import '../screens/reception_task_screen.dart';
 import '../screens/splash_screen.dart';
 import '../screens/wrapper.dart';
 import 'routes_names.dart';
@@ -39,6 +40,10 @@ class RouterGenerator {
       case RouteConstantName.receptionLogScreen:
         return MaterialPageRoute(
           builder: (context) =>  ReceptionLogScreen(),
+        );
+      case RouteConstantName.receptionTaskScreen:
+        return MaterialPageRoute(
+          builder: (context) =>  ReceptionTaskScreen(),
         );
       case RouteConstantName.scanQRScreen:
         return MaterialPageRoute(

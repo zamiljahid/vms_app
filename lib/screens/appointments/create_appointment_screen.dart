@@ -162,9 +162,13 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
                             _field(
                               "Employee Name",
                               _employeeName,
-                              keyboard: TextInputType.phone,
+                              keyboard: TextInputType.name,
                             ),
-
+                            _field(
+                              "Purpose",
+                              _employeeName,
+                              keyboard: TextInputType.name,
+                            ),
                             GestureDetector(
                               onTap: () => _selectDate(context),
                               child: AbsorbPointer(
