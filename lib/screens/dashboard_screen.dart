@@ -229,8 +229,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                           // Optional: logo action
                         },
                         child: Container(
-                          width: 36,
-                          height: 36,
+                          width: 40,
+                          height: 40,
                           decoration:  BoxDecoration(
                             color: Theme.of(context).primaryColorDark,
                             shape: BoxShape.circle,

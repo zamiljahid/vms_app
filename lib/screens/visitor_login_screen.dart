@@ -417,7 +417,8 @@ class _VisitorLoginScreenState extends State<VisitorLoginScreen> {
                           return;
                         }
 
-                        // Call API
+                        setState(() => isLoading = true);
+
                         final result = await ApiClient().visitorRegister(
                           name: name,
                           phone: phone,
@@ -427,23 +428,29 @@ class _VisitorLoginScreenState extends State<VisitorLoginScreen> {
                           nid: nid,
                           passport: passport,
                         );
+
                         setState(() => isLoading = false);
-                        if (result == "Registration Successful") {
+
+                        if (result.toLowerCase() == 'registration successful') {
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
                               title: const Text('Registration Successful'),
-                              content: const Text('Your account has been registered. Please login now.'),
+                              content: const Text(
+                                'Your account has been registered successfully.\nYou can now log in.',
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context); // Close dialog
+                                    Navigator.pop(context);
                                   },
                                   child: const Text('OK'),
                                 ),
                               ],
                             ),
                           );
+
+                          // Clear fields
                           registerNameController.clear();
                           registerPhoneController.clear();
                           registerEmailController.clear();
@@ -455,8 +462,8 @@ class _VisitorLoginScreenState extends State<VisitorLoginScreen> {
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text('Error'),
-                              content: Text(result.toString()), // fixed
+                              title: const Text('Registration Failed'),
+                              content: Text(result), // shows server message directly
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(context),
@@ -465,7 +472,6 @@ class _VisitorLoginScreenState extends State<VisitorLoginScreen> {
                               ],
                             ),
                           );
-
                         }
                       }
                     },

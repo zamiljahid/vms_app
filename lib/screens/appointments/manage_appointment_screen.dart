@@ -4,20 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:visitor_management/api/api_client.dart';
+import 'package:visitor_management/screens/appointments/models/manage_appointment_model.dart';
 import 'package:visitor_management/screens/shared_preference.dart';
+import '../action_widget.dart';
 import 'create_appointment_screen.dart';
 import 'appointment_history_screen.dart';
 import 'models/visit_upcoming.dart';
 
-class AppointmentHistoryScreen extends StatefulWidget {
-  const AppointmentHistoryScreen({super.key});
+class ManageAppointmentsScreen extends StatefulWidget {
+  const ManageAppointmentsScreen({super.key});
 
   @override
-  State<AppointmentHistoryScreen> createState() => _AppointmentHistoryScreenState();
+  State<ManageAppointmentsScreen> createState() =>
+      _ManageAppointmentsScreenState();
 }
 
-class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
-  List<UpcomingVisitModel> appointments = [];
+class _ManageAppointmentsScreenState extends State<ManageAppointmentsScreen> {
+  List<ManageAppointmentModel> appointments = [];
   bool isLoading = true;
   String? errorMessage, userId;
   int? role;
@@ -36,21 +39,15 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
       errorMessage = null;
     });
 
-    final api = ApiClient();
-    final result = await api.getUpcomingVisits(
-      roleId: role!,
-      employeeId: userId,
-      visitorUserId: userId,
-    );
-
-    if (result is String) {
-      setState(() {
-        errorMessage = result;
-        isLoading = false;
-      });
-    } else if (result is List<UpcomingVisitModel>) {
+    try {
+      final result = await ApiClient().getManageAppointments(userId.toString());
       setState(() {
         appointments = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
         isLoading = false;
       });
     }
@@ -74,7 +71,9 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
                 filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                 child: AppBar(
                   centerTitle: true,
-                  backgroundColor: Theme.of(context).primaryColorLight.withOpacity(0.9),
+                  backgroundColor: Theme.of(
+                    context,
+                  ).primaryColorLight.withOpacity(0.9),
                   elevation: 0,
                   leading: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -85,12 +84,16 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
                           color: Theme.of(context).primaryColorDark,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 22,
+                        ),
                       ),
                     ),
                   ),
                   title: Text(
-                    'Appointment History',
+                    'Manage Appointments',
                     style: TextStyle(
                       color: Theme.of(context).primaryColorDark,
                       fontWeight: FontWeight.w600,
@@ -110,7 +113,9 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
                     color: Theme.of(context).primaryColor.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: Theme.of(context).primaryColorLight.withOpacity(0.9),
+                      color: Theme.of(
+                        context,
+                      ).primaryColorLight.withOpacity(0.9),
                       width: 2,
                     ),
                   ),
@@ -118,17 +123,20 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
                     borderRadius: BorderRadius.circular(20),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : errorMessage != null
-                          ? Center(child: Text(errorMessage!))
-                          : ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: appointments.length,
-                        itemBuilder: (context, index) {
-                          return ListCard(appointment: appointments[index]);
-                        },
-                      ),
+                      child:
+                          isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : errorMessage != null
+                              ? Center(child: Text(errorMessage!))
+                              : ListView.builder(
+                                padding: const EdgeInsets.all(16),
+                                itemCount: appointments.length,
+                                itemBuilder: (context, index) {
+                                  return ListCard(
+                                    appointment: appointments[index],
+                                  );
+                                },
+                              ),
                     ),
                   ),
                 ),
@@ -142,14 +150,16 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
 }
 
 class ListCard extends StatefulWidget {
-  final UpcomingVisitModel appointment;
+  final ManageAppointmentModel appointment;
+
   const ListCard({super.key, required this.appointment});
 
   @override
   State<ListCard> createState() => _ListCardState();
 }
 
-class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin {
+class _ListCardState extends State<ListCard>
+    with SingleTickerProviderStateMixin {
   bool expanded = false;
   late final AnimationController _controller;
   late final Animation<double> _expandAnimation;
@@ -161,7 +171,10 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _expandAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _expandAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -180,13 +193,15 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final appointment = widget.appointment;
-    final hasQr = appointment.qrData != null && appointment.qrData!.isNotEmpty;
-// Parse date
+    // final hasQr = appointment.qrData != null && appointment.qrData!.isNotEmpty;
     DateTime date = DateTime.parse(appointment.appointmentDate);
-    String formattedDate = DateFormat("d MMMM yyyy").format(date); // 13 January 2026
+    String formattedDate = DateFormat(
+      "d MMMM yyyy",
+    ).format(date); // 13 January 2026
 
-// Parse time
-    DateTime time = DateTime.parse("${appointment.appointmentDate} ${appointment.appointmentTime}");
+    DateTime time = DateTime.parse(
+      "${appointment.appointmentDate} ${appointment.appointmentTime}",
+    );
     String formattedTime = DateFormat("hh:mm a").format(time);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
@@ -215,7 +230,10 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
             children: [
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColorDark.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(20),
@@ -226,8 +244,8 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                    formattedDate.toString(),
-                  style:  TextStyle(
+                  appointment.status.toUpperCase(),
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).primaryColorLight,
                     fontSize: 16,
@@ -235,29 +253,141 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    Text(
-                      appointment.hostEmployeeName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+              SizedBox(height: 10),
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                // vertically center with IconButton
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).secondaryHeaderColor, // background color
+                              ),
+                              child: Icon(
+                                Icons.person,
+                                size: 15,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).primaryColorDark, // icon color
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              "Name: ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                appointment.creatorName,
+                                style: const TextStyle(fontSize: 16),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+
+                        // Phone
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).secondaryHeaderColor, // background color
+                              ),
+                              child: Icon(
+                                Icons.phone,
+                                size: 15,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              "Phone: ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                appointment.creatorPhone,
+                                style: const TextStyle(fontSize: 16),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+
+                        // Email
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).secondaryHeaderColor, // background color
+                              ),
+                              child: Icon(
+                                Icons.email,
+                                size: 15,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              "Email: ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                appointment.creatorEmail,
+                                style: const TextStyle(fontSize: 16),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    Text(
-                      appointment.hostCompanyName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
+                  ),
+                  AppointmentActionButton(
+                    visitId: appointment.visitId,
+                    onActionSuccess: () async {
+                      if (mounted) {
+                        final state = context.findAncestorStateOfType<_ManageAppointmentsScreenState>();
+                        state?.fetchAppointments();
+                      }
+                    },
+                  )
+                ],
               ),
               SizeTransition(
                 sizeFactor: _expandAnimation,
@@ -270,7 +400,10 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
                       color: Theme.of(context).primaryColorDark,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(color: Colors.black.withOpacity(0.15), width: 1),
+                        side: BorderSide(
+                          color: Colors.black.withOpacity(0.15),
+                          width: 1,
+                        ), // subtle border shadow
                       ),
                       elevation: 6,
                       child: Padding(
@@ -278,11 +411,19 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _infoRow(Icons.work_outline, "Purpose", appointment.purpose),
-                            _infoRow(Icons.calendar_today, "Status", appointment.status),
+                            _infoRow(
+                              Icons.work_outline,
+                              "Purpose",
+                              appointment.purpose,
+                            ),
+                            _infoRow(
+                              Icons.calendar_today,
+                              "Date",
+                              formattedDate,
+                            ),
                             _infoRow(Icons.access_time, "Time", formattedTime),
-                            _infoRow(Icons.person_outline, "Host", appointment.hostEmployeeName),
-                            _infoRow(Icons.business_outlined, "Company", appointment.hostCompanyName),
+                            // _infoRow(Icons.person_outline, "Host", appointment.hostEmployeeName),
+                            // _infoRow(Icons.business_outlined, "Company", appointment.hostCompanyName),
                           ],
                         ),
                       ),
@@ -297,7 +438,9 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
                       ),
                     ),
                     const SizedBox(height: 8),
-                    ...appointment.visitors.map((v) => _visitorCard(v)).toList(),
+                    ...appointment.visitors
+                        .map((v) => _visitorCard(v))
+                        .toList(),
                   ],
                 ),
               ),
@@ -361,8 +504,13 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
         children: [
           CircleAvatar(
             radius: 22,
-            backgroundColor: Theme.of(context).primaryColorDark.withOpacity(0.1),
-            child:  Icon(Icons.person, color: Theme.of(context).primaryColorDark),
+            backgroundColor: Theme.of(
+              context,
+            ).primaryColorDark.withOpacity(0.1),
+            child: Icon(
+              Icons.person,
+              color: Theme.of(context).primaryColorDark,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -385,7 +533,7 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
                 if (visitor.visitorEmail != null)
                   Text(
                     "Email: ${visitor.visitorEmail!}",
-                    style:  TextStyle(color: Colors.black, fontSize: 13),
+                    style: TextStyle(color: Colors.black, fontSize: 13),
                   ),
                 if (visitor.visitorLocationOrCompany != null)
                   Text(

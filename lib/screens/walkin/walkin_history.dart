@@ -5,25 +5,27 @@ import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:visitor_management/api/api_client.dart';
 import 'package:visitor_management/screens/shared_preference.dart';
-import 'create_appointment_screen.dart';
-import 'appointment_history_screen.dart';
-import 'models/visit_upcoming.dart';
+import 'package:visitor_management/screens/walkin/create_walkin_screen.dart';
+import 'package:visitor_management/screens/walkin/model/walkin_model.dart';
+import '../appointments/appointment_history_screen.dart';
 
-class AppointmentHistoryScreen extends StatefulWidget {
-  const AppointmentHistoryScreen({super.key});
+class WalkInHistoryScreen extends StatefulWidget {
+  const WalkInHistoryScreen({super.key});
 
   @override
-  State<AppointmentHistoryScreen> createState() => _AppointmentHistoryScreenState();
+  State<WalkInHistoryScreen> createState() => _WalkInHistoryScreenState();
 }
 
-class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
-  List<UpcomingVisitModel> appointments = [];
+class _WalkInHistoryScreenState extends State<WalkInHistoryScreen> {
+  List<WalkInVisitorModel> walkins = [];
   bool isLoading = true;
   String? errorMessage, userId;
   int? role;
 
   @override
   void initState() {
+    // userId = 'UGE980';
+    // role = 2;
     userId = SharedPrefs.getString('userId');
     role = SharedPrefs.getInt('roleId');
     super.initState();
@@ -37,7 +39,7 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
     });
 
     final api = ApiClient();
-    final result = await api.getUpcomingVisits(
+    final result = await api.getWalkInHistory(
       roleId: role!,
       employeeId: userId,
       visitorUserId: userId,
@@ -48,9 +50,9 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
         errorMessage = result;
         isLoading = false;
       });
-    } else if (result is List<UpcomingVisitModel>) {
+    } else if (result is List<WalkInVisitorModel>) {
       setState(() {
-        appointments = result;
+        walkins = result;
         isLoading = false;
       });
     }
@@ -90,7 +92,7 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
                     ),
                   ),
                   title: Text(
-                    'Appointment History',
+                    'Walk In History',
                     style: TextStyle(
                       color: Theme.of(context).primaryColorDark,
                       fontWeight: FontWeight.w600,
@@ -121,12 +123,12 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
                       child: isLoading
                           ? const Center(child: CircularProgressIndicator())
                           : errorMessage != null
-                          ? Center(child: Text(errorMessage!))
+                          ? Center(child: Text(errorMessage!, style: TextStyle(color: Colors.white),))
                           : ListView.builder(
                         padding: const EdgeInsets.all(16),
-                        itemCount: appointments.length,
+                        itemCount: walkins.length,
                         itemBuilder: (context, index) {
-                          return ListCard(appointment: appointments[index]);
+                          return ListCard(walkins: walkins[index]);
                         },
                       ),
                     ),
@@ -142,8 +144,8 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
 }
 
 class ListCard extends StatefulWidget {
-  final UpcomingVisitModel appointment;
-  const ListCard({super.key, required this.appointment});
+  final WalkInVisitorModel walkins;
+  const ListCard({super.key, required this.walkins});
 
   @override
   State<ListCard> createState() => _ListCardState();
@@ -179,15 +181,19 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    final appointment = widget.appointment;
-    final hasQr = appointment.qrData != null && appointment.qrData!.isNotEmpty;
-// Parse date
-    DateTime date = DateTime.parse(appointment.appointmentDate);
-    String formattedDate = DateFormat("d MMMM yyyy").format(date); // 13 January 2026
+    final walkins = widget.walkins;
 
-// Parse time
-    DateTime time = DateTime.parse("${appointment.appointmentDate} ${appointment.appointmentTime}");
-    String formattedTime = DateFormat("hh:mm a").format(time);
+    final DateTime scheduledUtc =
+        walkins.scheduledDateTime ?? DateTime.now();
+
+    final DateTime scheduledLocal = scheduledUtc.toLocal();
+
+    final String formattedDate =
+    DateFormat('d MMMM yyyy').format(scheduledLocal);
+
+    final String formattedTime =
+    DateFormat('hh:mm a').format(scheduledLocal);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
       child: GestureDetector(
@@ -213,83 +219,69 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// STATUS
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColorDark.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Theme.of(context).primaryColorDark.withOpacity(0.8),
-                    width: 1.5,
-                  ),
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                    formattedDate.toString(),
-                  style:  TextStyle(
+                  walkins.status!.toUpperCase(),
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).primaryColorLight,
                     fontSize: 16,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    Text(
-                      appointment.hostEmployeeName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      appointment.hostCompanyName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
+
+              /// HOST INFO
+              const SizedBox(height: 12),
+              Text(
+                walkins.hostEmployeeName ?? '',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
+              Text(
+                walkins.hostCompanyName ?? '',
+                style: const TextStyle(fontSize: 14),
+              ),
+
+              /// EXPAND SECTION
               SizeTransition(
                 sizeFactor: _expandAnimation,
                 axisAlignment: -1,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Divider(height: 20, thickness: 1.2),
+                    const Divider(height: 20),
+
                     Card(
                       color: Theme.of(context).primaryColorDark,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(color: Colors.black.withOpacity(0.15), width: 1),
                       ),
-                      elevation: 6,
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _infoRow(Icons.work_outline, "Purpose", appointment.purpose),
-                            _infoRow(Icons.calendar_today, "Status", appointment.status),
+                            _infoRow(Icons.work_outline, "Purpose", walkins.purpose ?? '-'),
+                            _infoRow(Icons.calendar_today, "Date", formattedDate),
                             _infoRow(Icons.access_time, "Time", formattedTime),
-                            _infoRow(Icons.person_outline, "Host", appointment.hostEmployeeName),
-                            _infoRow(Icons.business_outlined, "Company", appointment.hostCompanyName),
+                            _infoRow(Icons.person_outline, "Host", walkins.hostEmployeeName ?? '-'),
+                            _infoRow(Icons.business_outlined, "Company", walkins.hostCompanyName ?? '-'),
                           ],
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 12),
+
+                    /// SINGLE VISITOR
                     Text(
-                      "Visitors",
+                      "Visitor",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -297,8 +289,7 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
                       ),
                     ),
                     const SizedBox(height: 8),
-                    ...appointment.visitors.map((v) => _visitorCard(v)).toList(),
-                  ],
+                    _visitorCard(walkins),                  ],
                 ),
               ),
             ],
@@ -307,6 +298,7 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
       ),
     );
   }
+
 
   Widget _infoRow(IconData icon, String title, String value) {
     return Padding(
@@ -337,7 +329,7 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _visitorCard(visitor) {
+  Widget _visitorCard(WalkInVisitorModel visitor) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -345,8 +337,8 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Theme.of(context).primaryColorDark, // border color
-          width: 1.5, // border thickness
+          color: Theme.of(context).primaryColorDark,
+          width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
@@ -361,8 +353,12 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
         children: [
           CircleAvatar(
             radius: 22,
-            backgroundColor: Theme.of(context).primaryColorDark.withOpacity(0.1),
-            child:  Icon(Icons.person, color: Theme.of(context).primaryColorDark),
+            backgroundColor:
+            Theme.of(context).primaryColorDark.withOpacity(0.1),
+            child: Icon(
+              Icons.person,
+              color: Theme.of(context).primaryColorDark,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -370,27 +366,31 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  visitor.visitorName,
+                  visitor.visitorName ?? '-',
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 15,
                   ),
                 ),
                 const SizedBox(height: 4),
-                if (visitor.visitorPhone != null)
+
+                if (visitor.visitorPhone != null && visitor.visitorPhone!.isNotEmpty)
                   Text(
                     "Phone: ${visitor.visitorPhone!}",
-                    style: const TextStyle(color: Colors.black, fontSize: 13),
+                    style: const TextStyle(fontSize: 13),
                   ),
-                if (visitor.visitorEmail != null)
+
+                if (visitor.visitorEmail != null && visitor.visitorEmail!.isNotEmpty)
                   Text(
                     "Email: ${visitor.visitorEmail!}",
-                    style:  TextStyle(color: Colors.black, fontSize: 13),
+                    style: const TextStyle(fontSize: 13),
                   ),
-                if (visitor.visitorLocationOrCompany != null)
+
+                if (visitor.visitorLocationOrCompany != null &&
+                    visitor.visitorLocationOrCompany!.isNotEmpty)
                   Text(
                     "Address: ${visitor.visitorLocationOrCompany!}",
-                    style: const TextStyle(color: Colors.black, fontSize: 12),
+                    style: const TextStyle(fontSize: 12),
                   ),
               ],
             ),

@@ -28,51 +28,63 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
   @override
   void initState() {
     super.initState();
-     previousTheme = SharedPrefs.getInt('appThemeCode');
-    _checkSavedAppKey();
+    previousTheme = SharedPrefs.getInt('appThemeCode');
+    _initAppKey();
   }
 
-  Future<void> _checkSavedAppKey() async {
+  Future<void> _initAppKey() async {
     final savedKey = await SharedPrefs.getString('key');
-
     if (savedKey != null && savedKey.isNotEmpty) {
       appKeyController.text = savedKey;
-      _autoVerifyAppKey(savedKey);
+      await _autoVerifyAppKey(savedKey); // wait for verification
     }
   }
-
   Future<void> _autoVerifyAppKey(String apiKey) async {
     setState(() => isVerifying = true);
 
     try {
       final company = await ApiClient().getCompanyData(apiKey);
 
-      if (company != null && company.success) {
+      if (company != null && company.success!) {
+        await SharedPrefs.setString('key', apiKey);
+        await SharedPrefs.setString('company_id', company.companyId.toString());
+        await SharedPrefs.setInt('appThemeCode', company.theme!);
+
         setState(() {
           isVerify = true;
+          appKeyController.text = apiKey;
+          companyTheme = company.theme!;
+          print(SharedPrefs.getString('company_id'));
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Theme.of(context).primaryColorLight,
             content: Text(
-              company.message,
+              company.message.toString(),
               style: TextStyle(color: Theme.of(context).primaryColorDark),
             ),
           ),
         );
       } else {
-        SharedPrefs.remove('key');
+        // API returned error
+        setState(() => isVerify = false);
         appKeyController.clear();
+        SharedPrefs.remove('key');
+        SharedPrefs.remove('company_id');
+        SharedPrefs.remove('appThemeCode');
       }
-    } catch (_) {
-      SharedPrefs.remove('key');
+    } catch (e) {
+      // Network/API error
+      setState(() => isVerify = false);
       appKeyController.clear();
+      SharedPrefs.remove('key');
+      SharedPrefs.remove('company_id');
+      SharedPrefs.remove('appThemeCode');
     } finally {
       setState(() => isVerifying = false);
     }
   }
-
 
   @override
   void dispose() {
@@ -266,22 +278,22 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
                             setState(() => isVerifying = true);
                             try {
                               final company = await ApiClient().getCompanyData(apiKey);
-
                               if (company != null) {
-                                if (company.success) {
-                                  setState(() {
+                                if (company.success == true && company.companyId != null) {                                  setState(() {
                                     isVerify = true;
                                     SharedPrefs.setString('key', appKeyController.text.trim());
                                     SharedPrefs.setString('company_id', company.companyId.toString());
-                                    SharedPrefs.setInt('appThemeCode', company.theme);
-                                    companyTheme = company.theme;
+                                    SharedPrefs.setInt('appThemeCode', company.theme!);
+                                    companyTheme = company.theme!;
+                                    print('COMPANY THEME:');
+                                    print(SharedPrefs.getString('company_id').toString());
+                                    print(companyTheme);
                                   });
-
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Theme.of(context).primaryColorLight,
                                       content: Text(
-                                        company.message,
+                                        company.message.toString(),
                                         style: TextStyle(color: Theme.of(context).primaryColorDark),
                                       ),
                                     ),
@@ -291,7 +303,7 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
                                     context: context,
                                     builder: (context) => AlertDialog(
                                       title: const Text('Error'),
-                                      content: Text(company.message),
+                                      content: Text(company.message.toString()),
                                       actions: [
                                         TextButton(
                                           onPressed: () => Navigator.pop(context),
@@ -301,8 +313,8 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
                                     ),
                                   );
                                 }
-                              } else {
-                                // Fallback if null
+                              }
+                              else {
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -318,6 +330,7 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
                                 );
                               }
                             } catch (e) {
+                              print(e.toString());
                               showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
@@ -503,11 +516,13 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
         final loginId = loginController.text.trim();
         final password = passwordController.text.trim();
 
+        print(SharedPrefs.getString('company_id').toString());
         final result = await ApiClient().employeeLogin(
           companyId: SharedPrefs.getString('company_id').toString(),
           loginId: loginId,
           password: password,
         );
+
         setState(() => isLogin = false);
         if (result['success'] == true) {
           SharedPrefs.setString('name', result['name']);
@@ -528,6 +543,10 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
           );
           final newAppThemeCode = themeCode;
           if (previousTheme != newAppThemeCode) {
+            print('OLD APP THEME CODE: ');
+            print(previousTheme.toString());
+            print('NEW APP THEME CODE: ');
+            print(newAppThemeCode.toString());
             await SharedPrefs.setInt('appThemeCode', newAppThemeCode);
             Navigator.pushAndRemoveUntil(
               context,

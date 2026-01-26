@@ -149,7 +149,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       child: isLoading
                           ? const Center(child: CircularProgressIndicator())
                           : errorMessage != null
-                          ? Center(child: Text(errorMessage!))
+                          ? Center(child: Text(errorMessage!, style: TextStyle(color: Colors.white),))
                           : ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: appointments.length,
@@ -166,11 +166,14 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const CreateAppointmentScreen()),
           );
+          if (result == true) {
+            await fetchAppointments();
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -273,22 +276,39 @@ class _ListCardState extends State<ListCard> with SingleTickerProviderStateMixin
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center, // vertically center with IconButton
                 children: [
                   Expanded(
-                    child: Text(
-                      "${appointment.creatorName}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start, // left-align texts
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          appointment.hostEmployeeName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4), // small spacing between name and company
+                        Text(
+                          appointment.hostCompanyName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
                   ),
                   IconButton(
                     icon: Icon(
                       Icons.qr_code,
-                      color: hasQr ? Theme.of(context).primaryColorDark : Theme.of(context).primaryColorDark.withOpacity(0.2),
+                      color: hasQr
+                          ? Theme.of(context).primaryColorDark
+                          : Theme.of(context).primaryColorDark.withOpacity(0.2),
                       size: 28,
                     ),
                     onPressed: hasQr
