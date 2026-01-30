@@ -164,8 +164,8 @@ class _ReceptionTaskScreenState extends State<ReceptionTaskScreen> {
       int index,
       ) {
     bool isExpanded = expandedIndex == index;
-    double collapsedHeight = 65;
-    double expandedHeight = MediaQuery.of(context).size.height * 0.64;
+    double collapsedHeight = 70;
+    double expandedHeight = MediaQuery.of(context).size.height * 0.60;
 
     return Padding(
       padding: const EdgeInsets.all(10.0),

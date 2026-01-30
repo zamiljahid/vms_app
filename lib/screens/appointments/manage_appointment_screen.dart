@@ -123,20 +123,35 @@ class _ManageAppointmentsScreenState extends State<ManageAppointmentsScreen> {
                     borderRadius: BorderRadius.circular(20),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child:
-                          isLoading
-                              ? const Center(child: CircularProgressIndicator())
-                              : errorMessage != null
-                              ? Center(child: Text(errorMessage!))
-                              : ListView.builder(
-                                padding: const EdgeInsets.all(16),
-                                itemCount: appointments.length,
-                                itemBuilder: (context, index) {
-                                  return ListCard(
-                                    appointment: appointments[index],
-                                  );
-                                },
-                              ),
+                      child: isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : errorMessage != null
+                          ? Center(
+                        child: Text(
+                          errorMessage!,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      )
+                          : appointments.isEmpty
+                          ? const Center(
+                        child: Text(
+                          'No data available',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      )
+                          : ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: appointments.length,
+                        itemBuilder: (context, index) {
+                          return ListCard(
+                            appointment: appointments[index],
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -339,8 +354,6 @@ class _ListCardState extends State<ListCard>
                           ],
                         ),
                         const SizedBox(height: 6),
-
-                        // Email
                         Row(
                           children: [
                             Container(
@@ -350,7 +363,7 @@ class _ListCardState extends State<ListCard>
                                 color:
                                     Theme.of(
                                       context,
-                                    ).secondaryHeaderColor, // background color
+                                    ).secondaryHeaderColor,
                               ),
                               child: Icon(
                                 Icons.email,

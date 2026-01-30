@@ -444,7 +444,8 @@ class ApiClient {
 
   Future<List<ManageAppointmentModel>> getManageAppointments(
     String employeeId,
-  ) async {
+  )
+  async {
     final url = Uri.parse(
       baseUrl + manageAppointmentUrl + "?employeeId=$employeeId",
     );
